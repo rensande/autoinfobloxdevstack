@@ -7,3 +7,5 @@ chown -R stack:stack /opt/stack
 mv devstack /opt
 chown -R stack:stack /opt/devstack
 echo Enter password for user "stack"
+su stack
+/opt/stack/stack.sh
