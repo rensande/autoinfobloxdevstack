@@ -1,0 +1,11 @@
+#!/bin/bash
+git clone https://github.com/openstack-dev/devstack.git -b stable/liberty
+git clone https://github.com/infobloxopen/engcloud
+cp locl.conf devstack
+sudo devstack/tools/create-stack-user.sh
+mkdir -p /opt/stack
+chown -R stack:stack /opt/stack
+mv devstack /opt
+mv engloud /opt
+chown -R stack:stack /opt/devstack
+chown -R stack:stack /opt/engcoud
