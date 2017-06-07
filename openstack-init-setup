@@ -1,19 +1,10 @@
 #!/bin/bash
-source /opt/devstack/openrc admin admin
-neutron net-create public-network --shared --provider:physical_network public --provider:network_type flat --router:external True
-neutron subnet-create public-network 10.192.33.0/24 --name public-subnet --allocation-pool start=10.192.33.20,end=10.192.33.254 --dns-nameserver 10.192.33.58 --gateway 10.192.33.1
-neutron net-create mgmt-network --provider:network_type vxlan
-neutron net-create lan1-network --provider:network_type vxlan
-neutron net-create lan2-network --provider:network_type vxlan
-neutron subnet-create mgmt-network --name mgmt-subnet 192.168.0.0/24 --dns-nameserver 10.192.33.12
-neutron subnet-create lan1-network --name lan1-subnet 192.168.1.0/24 --dns-nameserver 10.192.33.12
-neutron subnet-create lan2-network --name lan2-subnet 192.168.2.0/24 --dns-nameserver 10.192.33.12
+
+neutron net-create public-network --shared --provider:physical_network External --provider:network_type flat --router:external True
+neutron subnet-create public-network 10.64.36.0/22 --name public-subnet --allocation-pool start=10.64.39.1,end=10.64.29.30 --dns-nameserver 10.102.3.50 --gateway 10.64.36.1
+neutron net-create pvt-network --provider:network_type vxlan
+neutron subnet-create pvt-network --name pvt-subnet 192.168.0.0/24 --dns-nameserver 10.192.33.12
 neutron router-create nios-r1
-neutron router-gateway-set nios-r1 public
-neutron router-interface-add nios-r1 mgmt-subnet
-neutron router-interface-add nios-r1 lan1-subnet
-neutron router-interface-add nios-r1 lan2-subnet
-ssh-keygen -q -N "" -f /opt/stack/.ssh/id_rsa
-nova keypair-add --pub-key /opt/stack/.ssh/id_rsa.pub my-key
-nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
-nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
+neutron router-gateway-set nios-r1 public-network
+neutron router-interface-add nios-r1 pvt-subnet
+
